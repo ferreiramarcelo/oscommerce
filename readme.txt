@@ -1,7 +1,7 @@
-***********
+------------------------------------------------
 Módulo de integração PagSeguro para osCommerce
-v.1.0
-***********
+v.1.1
+------------------------------------------------
 
 
 = Descrição =
@@ -17,7 +17,7 @@ Disponível para a versão Online Merchant 2.3.3 do osCommerce.
 = Instalação =
 
 1. Certifique-se de que não há instalação de outros módulos para o PagSeguro em seu sistema;
-2. Descompacte o conteúdo do arquivo zip e copie as pastas 'ext' e 'includes' para dentro de sua instalação osCommerce. Caso seja informado da sobrescrita de alguns arquivos, você pode confirmar o procedimento sem problemas. Esta instalação não afetará nenhum arquivo do seu sistema, somente adicionará os arquivos do módulo PagSeguro;
+2. Descompacte o conteúdo do arquivo zip e copie as pastas 'ext' e 'includes' e o arquivo pagseguronotification.php para dentro de sua instalação osCommerce. Caso seja informado da sobrescrita de alguns arquivos, você pode confirmar o procedimento sem problemas. Esta instalação não afetará nenhum arquivo do seu sistema, somente adicionará os arquivos do módulo PagSeguro;
 3. Acesse a área administrativa e clique em Módulos/Pagamento, na tela que abrir clique em Instalar Módulo. Selecione o módulo PagSeguro e instale-o;
 4. Agora será necessário configurar seu módulo para que ele funcione efetivamente.
 
@@ -32,16 +32,32 @@ Após instalado o módulo, é necessário que se faça algumas configurações para que
 	- charset: codificação do sistema (ISO-8859-1 ou UTF-8)
 	- log: Nome do arquivo de log . Ex.: log_pagseguro.log
 		* O arquivo de log será gerado no diretório catalog/ext/modules/payment/pagseguro/log/
+	
+	Notificações de Transação
+	
+		- Essa funcionalidade tem por objetivo persistir no sistema as atualizações de status das compras realizadas através do PagSeguro. Essa atualização é transparente para o sistema. É necessário somente que seja ativada a funcionalidade de Notificações de Transação no PagSeguro e informar a url que é exibida no ambiente de configuração do módulo do PagSeguro dentro do sistema.
+		- Para configurar esses dados no PagSeguro, acesse https://pagseguro.uol.com.br/integracao/notificacao-de-transacoes.jhtml.
+		- Uma vez configuradas essas informações no PagSeguro, o sistema passará a receber e processar automaticamente os novos status das transações com o PagSeguro, o que dá ao vendedor e ao comprador, uma maior facilidade para acompanhar os status de suas vendas e compras respectivamente, dentro do próprio site.
 
 
 = Changelog =
+
+v1.1
+	- Integração com API de Notificação do PagSeguro.
+	- Adequação da licença.
+	- Adição de tratamento para duplo espaço no nome do comprador.
+	- Adição de link para fazer cadastro no Pagseguro.
+	- Adição do parâmetro "Sort of Display" para definir a ordem de exibição do módulo PagSeguro dentre os módulos de pagamento
+	- Correção : limpeza de carrinho ao ser redirecionado para o PagSeguro
+	- Correção : tratamento na formação do nome do cliente para efetuar a transação com o PagSeguro
+	
 
 v1.0
 Versão inicial. Integração com API de checkout do PagSeguro.
 
 
 = NOTAS =
-	
+
 	- O PagSeguro será exibido como opção de pagamento somente se a moeda de compra for Real brasileiro (BRL).
 	- Certifique-se que o email e o token informados estejam relacionados a uma conta que possua o perfil de vendedor ou empresarial.
 	- Certifique-se que tenha definido corretamente o charset de acordo com a codificação (ISO-8859-1 ou UTF-8) do seu sistema. Isso irá prevenir que as transações gerem possíveis erros ou quebras ou ainda que caracteres especiais possam ser apresentados de maneira diferente do habitual.
