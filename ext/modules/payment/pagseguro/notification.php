@@ -136,7 +136,6 @@ class notification{
     private function _updateCms(){
         $arrayValue = $this->arrayStCms[$this->objTransaction->getStatus()->getValue()];
         $idStatus = $this->_returnIdOrderByStatusPagSeguro($arrayValue);
-        $this->objPagSeguro->updateOrderStatus((int)$this->reference, $idStatus);
         $this->_updateOrders($idStatus);
     }
     
@@ -151,6 +150,7 @@ class notification{
         
         try {
             tep_db_query($query);
+            $this->objPagSeguro->updateOrderStatus($this->reference, $idStatus );
         } catch (Exception $exc) {}
     }
     

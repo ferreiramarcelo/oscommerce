@@ -109,7 +109,7 @@ class pagseguro {
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('LOG', 'MODULE_PAYMENT_PAGSEGURO_LOG_ACTIVE', '".PagSeguroConfig::getData('log', 'active')."', 'Ativar a gera&ccedil;&atilde;o de log ?', '6', '".$display_order++."', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('ARQUIVO LOG', 'MODULE_PAYMENT_PAGSEGURO_LOG_FILELOCATION', '".PagSeguroConfig::getData('log', 'fileLocation')."', 'Informe o nome do arquivo de log', '6', '".$display_order++."', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('ORDEM DE CLASSIFICA&Ccedil;&Atilde;O DE EXIBI&Ccedil;&Atilde;O', 'MODULE_PAYMENT_PAGSEGURO_SORT', '1', '', '6', '".$display_order++."',now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('DEFINIR URL QUE IR&Aacute; RECEBER AS NOTIFICA&Ccedil;&Otilde;ES', 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION', '', '<a href=\"https://pagseguro.uol.com.br/integracao/notificacao-de-transacoes.jhtml\" target=\"_blank\"><strong>Clique aqui</strong></a> e cadastre a seguinte url: ".$this->_generateNotificationUrl()." ', '6','noInputText()', '".$display_order++."',now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DEFINIR URL QUE IR&Aacute; RECEBER AS NOTIFICA&Ccedil;&Otilde;ES', 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION', '', '<a href=\"https://pagseguro.uol.com.br/integracao/notificacao-de-transacoes.jhtml\" target=\"_blank\"><strong>Clique aqui</strong></a> e cadastre a seguinte url: ".$this->_generateNotificationUrl()." ', '6', '".$display_order++."',now())");
         
         // generating PagSeguro order status
         $this->_generatePagSeguroOrderStatus();
@@ -402,10 +402,18 @@ class pagseguro {
 
         if (tep_db_num_rows($queryResult)>0){
             $queryResult = tep_db_fetch_array($queryResult);
-            $redirectUrl = ( isset($queryResult['redirectUrl']) && trim($queryResult['redirectUrl']) != "" )   ? trim($queryResult['redirectUrl']) : HTTP_SERVER."/commerceps/catalog/checkout_success.php";
+            $redirectUrl = ( isset($queryResult['redirectUrl']) && trim($queryResult['redirectUrl']) != "" )   ? trim($queryResult['redirectUrl']) : $this->_generateRedirectUrl();
         }
 
         return $redirectUrl;
+    }
+    
+    /**
+     * Generate Redirect Url
+     * @return string
+     */
+    private function _generateRedirectUrl(){
+        return HTTP_SERVER.DIR_WS_CATALOG.'checkout_success.php';
     }
     
     /**
@@ -487,11 +495,35 @@ class pagseguro {
         
         if (isset($customer) && !is_null($customer)){
             $sender->setEmail($customer['email_address']);
-            $sender->setName($customer['firstname']. ' ' . $customer['lastname']);
+            $name = $this->_generateName($customer['firstname']).' '.$this->_generateName($customer['lastname']);
+            $sender->setName($name);
         }
         
         return $sender;
     }
+    
+     /**
+     * Generate name 
+     * @param type $value
+     * @return string
+     */
+    private function _generateName($value){
+        $name = '';
+        $cont = 0;
+        
+        $customer = explode(" ", $value );
+        
+            foreach ($customer as $first){
+                if($first != null && $first =! "")
+                        if($cont == 0){
+                            $name .= ($first);
+                            $cont++;
+                        } else 
+                            $name .= ' '.($first);
+                }
+
+        return $name;
+    }    
     
     /**
      * Generates products data to PagSeguro transaction
