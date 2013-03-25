@@ -1,6 +1,6 @@
 ------------------------------------------------
 Módulo de integração PagSeguro para osCommerce
-v.1.1
+v1.1
 ------------------------------------------------
 
 
@@ -12,6 +12,11 @@ Este módulo tem por finalidade integrar o PagSeguro como meio de pagamento dentr
 = Requisitos =
 
 Disponível para a versão Online Merchant 2.3.3 do osCommerce.
+
+PHP 5.1.6+
+SPL
+cURL
+DOM
 
 
 = Instalação =
@@ -32,12 +37,9 @@ Após instalado o módulo, é necessário que se faça algumas configurações para que
 	- charset: codificação do sistema (ISO-8859-1 ou UTF-8)
 	- log: Nome do arquivo de log . Ex.: log_pagseguro.log
 		* O arquivo de log será gerado no diretório catalog/ext/modules/payment/pagseguro/log/
-	
-	Notificações de Transação
-	
-		- Essa funcionalidade tem por objetivo persistir no sistema as atualizações de status das compras realizadas através do PagSeguro. Essa atualização é transparente para o sistema. É necessário somente que seja ativada a funcionalidade de Notificações de Transação no PagSeguro e informar a url que é exibida no ambiente de configuração do módulo do PagSeguro dentro do sistema.
-		- Para configurar esses dados no PagSeguro, acesse https://pagseguro.uol.com.br/integracao/notificacao-de-transacoes.jhtml.
-		- Uma vez configuradas essas informações no PagSeguro, o sistema passará a receber e processar automaticamente os novos status das transações com o PagSeguro, o que dá ao vendedor e ao comprador, uma maior facilidade para acompanhar os status de suas vendas e compras respectivamente, dentro do próprio site.
+	- Notificações de Transação
+		- Para receber e processar automaticamente os novos status das transações com o PagSeguro você deve ativar o serviço de Notificação de Transações. Basta acessar o painel de controle de sua conta PagSeguro e informe a url que aparece nas configurações do módulo;
+		- https://pagseguro.uol.com.br/integracao/notificacao-de-transacoes.jhtml
 
 
 = Changelog =
