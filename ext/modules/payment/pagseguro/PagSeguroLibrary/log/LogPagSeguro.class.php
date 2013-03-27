@@ -121,7 +121,7 @@ class LogPagSeguro{
 			$type_message = "";
 			switch ($type) {
 				case 'info' : 		$type_message = "[Info]"; 		break;
-				case 'warning' : 		$type_message = "[Warning]"; 	break;
+				case 'warning' : 	$type_message = "[Warning]"; 	break;
 				case 'error' : 		$type_message = "[Error]"; 		break;
 				case 'debug' :
 				default: 			$type_message = "[Debug]"; 		break;

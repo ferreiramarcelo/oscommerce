@@ -303,7 +303,7 @@ class pagseguro {
      * Retrieve PagSeguro PrestaShop module version
      */
     private function _retrievePagSeguroModuleVersion(){
-        PagSeguroLibrary::setModuleVersion('oscommerce-v'.$this->api_version);
+        PagSeguroLibrary::setModuleVersion('oscommerce-v.'.$this->api_version);
     }
     
     /**
@@ -313,7 +313,7 @@ class pagseguro {
         try {
             $file = @fopen(DIR_FS_CATALOG.'includes/version.php', 'r');
             $version = fread($file, 12);
-            PagSeguroLibrary::setCMSVersion('oscommerce-v'.$version);
+            PagSeguroLibrary::setCMSVersion('oscommerce-v.'.$version);
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
