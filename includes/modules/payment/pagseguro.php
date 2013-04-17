@@ -27,7 +27,7 @@ class pagseguro {
     function pagseguro() {
         global $order;
 
-        $this->api_version = '1.1';
+        $this->api_version = '1.2';
         
         $this->code = 'pagseguro';
         $this->title = MODULE_PAYMENT_PAGSEGURO_TEXT_TITLE;
