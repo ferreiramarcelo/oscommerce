@@ -100,15 +100,15 @@ class pagseguro {
     function install() {
 
         // generating PagSeguro module configurations
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('ATIVAR M&Oacute;DULO', 'MODULE_PAYMENT_PAGSEGURO_STATUS', 'True', 'Voc&ecirc; deseja utilizar o PagSeguro como gateway de pagamento ? <a href=\"https://pagseguro.uol.com.br/registration/registration.jhtml?ep=6&tipo=cadastro#!vendedor\" target=\"_blank\"><strong>Clique aqui</strong></a> para se cadastrar no PagSeguro.', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('ORDEM DE EXIBI&Ccedil;&Atilde;O', 'MODULE_PAYMENT_PAGSEGURO_SORT_ORDER', '1', 'Ordem de classificação de exibição. Menor é exibida primeiro.', '6', '0',now())");       
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E&ndash;MAIL', 'MODULE_PAYMENT_PAGSEGURO_EMAIL', '".PagSeguroConfig::getData('credentials', 'email')."', 'Informe o e-mail cadastrado no PagSeguro. Caso ainda n&atilde;o possua as credenciais, <a href=\"https://pagseguro.uol.com.br/\" target=\"_blank\"><strong>clique aqui</strong></a> e cadastre-se!', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('TOKEN', 'MODULE_PAYMENT_PAGSEGURO_TOKEN', '".PagSeguroConfig::getData('credentials', 'token')."', 'Informe o token cadastrado no PagSeguro. Caso ainda n&atilde;o possua o token, <a href=\"https://pagseguro.uol.com.br/integracao/token-de-seguranca.jhtml\" target=\"_blank\"><strong>clique aqui</strong></a> para ger&aacute;-lo.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('URL DE REDIRECIONAMENTO', 'MODULE_PAYMENT_PAGSEGURO_REDIRECT_URL', '', '&Eacute preciso que a op&ccedil;&atilde;o \"Quero receber somente pagamentos via API\" esteja ativada. <a href=\"https://pagseguro.uol.com.br/integracao/pagamentos-via-api.jhtml\" target=\"_blank\"><strong>Configure.</strong></a>', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('URL DE NOTIFICA&Ccedil;&Atilde;O', 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION', '".$this->_generateNotificationUrl()."', '<a href=\"https://pagseguro.uol.com.br/integracao/notificacao-de-transacoes.jhtml\" target=\"_blank\"><strong>Clique aqui</strong></a> e cadastre a url padrão (".$this->_urlNotificationSystem().") ou a url que você personaliza abaixo: ', '6', '0',now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('CHARSET', 'MODULE_PAYMENT_PAGSEGURO_CHARSET', '".PagSeguroConfig::getData('application', 'charset')."', 'Informe o charset da sua aplica&ccedil;&atilde;o', '6', '0', 'tep_cfg_select_option(array(\'ISO-8859-1\', \'UTF-8\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('LOG', 'MODULE_PAYMENT_PAGSEGURO_LOG_ACTIVE', '".PagSeguroConfig::getData('log', 'active')."', 'Ativar a gera&ccedil;&atilde;o de log ?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DIRETÓRIO', 'MODULE_PAYMENT_PAGSEGURO_LOG_FILELOCATION', '".PagSeguroConfig::getData('log', 'fileLocation')."', 'Informe o nome do arquivo de log', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('ATIVAR M&Oacute;DULO', 'MODULE_PAYMENT_PAGSEGURO_STATUS', 'True', 'Deseja habilitar o m&#243;dulo?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('ORDEM DE EXIBI&Ccedil;&Atilde;O', 'MODULE_PAYMENT_PAGSEGURO_SORT_ORDER', '1', 'Informe a ordem em que o PagSeguro deve aparecer no checkout de sua loja.', '6', '0',now())");       
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E&ndash;MAIL', 'MODULE_PAYMENT_PAGSEGURO_EMAIL', '".PagSeguroConfig::getData('credentials', 'email')."', 'N&#227;o tem conta no PagSeguro? Clique <a href=\"https://pagseguro.uol.com.br/registration/registration.jhtml?ep=6&tipo=cadastro#!vendedor\" target=\"_blank\"><strong>aqui</strong></a> e cadastre-se gr&#225;tis.', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('TOKEN', 'MODULE_PAYMENT_PAGSEGURO_TOKEN', '".PagSeguroConfig::getData('credentials', 'token')."', 'N&#227;o tem ou n&#227;o sabe seu token? Clique <a href=\"https://pagseguro.uol.com.br/integracao/token-de-seguranca.jhtml\" target=\"_blank\"><strong>aqui</strong></a> para gerar um novo.', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('URL DE REDIRECIONAMENTO', 'MODULE_PAYMENT_PAGSEGURO_REDIRECT_URL', '".$this->_generateRedirectUrl()."', 'Seu cliente ser&#225; redirecionado de volta para sua loja ou para a URL que voc&#234; informar neste campo. Clique <a href=\"https://pagseguro.uol.com.br/integracao/pagamentos-via-api.jhtml\" target=\"_blank\"><strong>aqui</strong></a> para ativar.', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('URL DE NOTIFICA&Ccedil;&Atilde;O', 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION', '".$this->_generateNotificationUrl()."', 'Sempre que uma transa&#231;&#227;o mudar de status, o PagSeguro envia uma notifica&#231;&#227;o para sua loja ou para a URL que voc&#234; informar neste campo.', '6', '0',now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('CHARSET', 'MODULE_PAYMENT_PAGSEGURO_CHARSET', '".PagSeguroConfig::getData('application', 'charset')."', 'Defina o charset de acordo com a codifica&#231;&#227;o do seu sistema.', '6', '0', 'tep_cfg_select_option(array(\'ISO-8859-1\', \'UTF-8\'), ', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('LOG', 'MODULE_PAYMENT_PAGSEGURO_LOG_ACTIVE', 'False', 'Criar arquivo de log?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DIRETÓRIO', 'MODULE_PAYMENT_PAGSEGURO_LOG_FILELOCATION', '".PagSeguroConfig::getData('log', 'fileLocation')."', 'Caminho para o arquivo de log.', '6', '0', now())");
         
         // generating PagSeguro order status
         $this->_generatePagSeguroOrderStatus();
@@ -160,22 +160,14 @@ class pagseguro {
              tep_db_query($query);
         } catch (Exception $exc) {}
     }
-    
+        
     /**
      * Url notification system
-     * @return type
+     * @return string
      */
     private function _urlNotificationSystem(){
-        $url = '';
-        if(ENABLE_SSL_CATALOG)
-            $url .= HTTPS_CATALOG_SERVER;
-        else
-            $url .= HTTP_CATALOG_SERVER;
-        
-        return (string) $url.DIR_WS_CATALOG.'pagseguronotification.php';
+        return HTTP_SERVER.DIR_WS_CATALOG.'pagseguronotification.php';
     }
-    
-    
     
     /**
      * PagSeguro module removal function
@@ -208,7 +200,7 @@ class pagseguro {
         return false;
     }
 
-    /**
+    /**HTTP_SERVER.DIR_WS_CATALOG
      * Called on payment method selection
      * if the current order products aren't in brazilian currency (BRL),
      * PagSeguro payment gateway will not displayed
@@ -332,7 +324,7 @@ class pagseguro {
                                                 ($configurations['MODULE_PAYMENT_PAGSEGURO_LOG_ACTIVE'] == 'True'), 
                                                 $configurations['MODULE_PAYMENT_PAGSEGURO_LOG_FILELOCATION']);
 
-            // retrieving PagSeguro Prestashop module version
+            // retrieving PagSeguro osCommerce module version
             $this->_retrievePagSeguroModuleVersion();
             $this->_setCmsVersion();
 
@@ -349,7 +341,7 @@ class pagseguro {
     }
     
     /**
-     * Retrieve PagSeguro PrestaShop module version
+     * Retrieve PagSeguro osCommerce module version
      */
     private function _retrievePagSeguroModuleVersion(){
         PagSeguroLibrary::setModuleVersion('oscommerce-v.'.$this->api_version);
@@ -429,14 +421,30 @@ class pagseguro {
         $paymentRequest = new PagSeguroPaymentRequest();
         $paymentRequest->setCurrency(PagSeguroCurrencies::getIsoCodeByName("REAL")); // sets currency
         $paymentRequest->setExtraAmount($this->_generateExtraAmount()); // extra amount
-        $paymentRequest->setRedirectURL($this->_getPagSeguroRedirectUrl());
-        $paymentRequest->setNotificationURL($this->_generateNotificationUrl());
+        $paymentRequest->setRedirectURL($this->_getPagSeguroRedirectUrl()); // redirect url
+        $paymentRequest->setNotificationURL($this->_getPagSeguroNotificationUrl()); // notification url
         $paymentRequest->setItems($this->_generatePagSeguroProductsData()); // products
         $paymentRequest->setSender($this->_generatepagSeguroSenderDataObject()); // sender
         $paymentRequest->setShipping($this->_generatePagSeguroShippingDataObject()); // shipping
-        $paymentRequest->setNotificationURL($this->_generateNotificationUrl()); // url notification
         
         return $paymentRequest; 
+    }
+
+    /**
+     * Get PagSeguro notification url from database configuration
+     * @return string
+     */
+    private function _getPagSeguroNotificationUrl(){
+        $notificationUrl = NULL;
+        
+        $queryResult = tep_db_query("select configuration_value as notificationUrl from configuration where configuration_key = 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION' limit 1");
+
+        if (tep_db_num_rows($queryResult)>0){
+            $queryResult = tep_db_fetch_array($queryResult);
+            $notificationUrl = ( isset($queryResult['notificationUrl']) && trim($queryResult['notificationUrl']) != "" )   ? trim($queryResult['notificationUrl']) : $this->_generateNotificationUrl();
+        }
+
+        return $notificationUrl;
     }
     
     /**
@@ -463,7 +471,8 @@ class pagseguro {
     private function _generateRedirectUrl(){
         return HTTP_SERVER.DIR_WS_CATALOG.'checkout_success.php';
     }
-    
+
+  
     /**
      * Generates extra amount data to PagSeguro transaction
      * @global Object $order
@@ -682,3 +691,4 @@ class pagseguro {
 }
 
 ?>
+
