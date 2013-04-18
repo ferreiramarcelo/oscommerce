@@ -386,8 +386,8 @@ class pagseguro {
  
         // setting configurated default log info
         if ($activeLog){
-            $this->_verifyLogFile(DIR_FS_CATALOG.'ext/modules/payment/pagseguro/log/'.$fileLocation);
-            PagSeguroConfig::activeLog(DIR_FS_CATALOG.'ext/modules/payment/pagseguro/log/'.$fileLocation);		
+            $this->_verifyLogFile(DIR_FS_CATALOG.$fileLocation);
+            PagSeguroConfig::activeLog(DIR_FS_CATALOG.$fileLocation);		
         }
 
     }
