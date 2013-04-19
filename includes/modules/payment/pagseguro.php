@@ -409,7 +409,7 @@ class pagseguro {
     }
     
     /**
-     * Generates PagSeguroPaymentRequest object to perform 
+     * Generates PagSeguroPaymentRequest object to perform
      * system and PagSeguro order transaction
      * *** The reference code will be generated in after_process()
      * @global Object $currency
