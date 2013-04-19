@@ -100,34 +100,18 @@ class pagseguro {
     function install() {
 
         // generating PagSeguro module configurations
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('ATIVAR M&Oacute;DULO', 'MODULE_PAYMENT_PAGSEGURO_STATUS', 'True', 'Deseja habilitar o m&#243;dulo?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('ORDEM DE EXIBI&Ccedil;&Atilde;O', 'MODULE_PAYMENT_PAGSEGURO_SORT_ORDER', '1', 'Informe a ordem em que o PagSeguro deve aparecer no checkout de sua loja.', '6', '0',now())");       
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E&ndash;MAIL', 'MODULE_PAYMENT_PAGSEGURO_EMAIL', '".PagSeguroConfig::getData('credentials', 'email')."', 'N&#227;o tem conta no PagSeguro? Clique <a href=\"https://pagseguro.uol.com.br/registration/registration.jhtml?ep=6&tipo=cadastro#!vendedor\" target=\"_blank\"><strong>aqui</strong></a> e cadastre-se gr&#225;tis.', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('ATIVAR M&#211;DULO', 'MODULE_PAYMENT_PAGSEGURO_STATUS', 'True', 'Deseja habilitar o m&#243;dulo?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('ORDEM DE EXIBI&#199;&#195;O', 'MODULE_PAYMENT_PAGSEGURO_SORT_ORDER', '1', 'Informe a ordem em que o PagSeguro deve aparecer no checkout de sua loja.', '6', '0',now())");       
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E-MAIL', 'MODULE_PAYMENT_PAGSEGURO_EMAIL', '".PagSeguroConfig::getData('credentials', 'email')."', 'N&#227;o tem conta no PagSeguro? Clique <a href=\"https://pagseguro.uol.com.br/registration/registration.jhtml?ep=6&tipo=cadastro#!vendedor\" target=\"_blank\"><strong>aqui</strong></a> e cadastre-se gr&#225;tis.', '6', '0', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('TOKEN', 'MODULE_PAYMENT_PAGSEGURO_TOKEN', '".PagSeguroConfig::getData('credentials', 'token')."', 'N&#227;o tem ou n&#227;o sabe seu token? Clique <a href=\"https://pagseguro.uol.com.br/integracao/token-de-seguranca.jhtml\" target=\"_blank\"><strong>aqui</strong></a> para gerar um novo.', '6', '0', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('URL DE REDIRECIONAMENTO', 'MODULE_PAYMENT_PAGSEGURO_REDIRECT_URL', '".$this->_generateRedirectUrl()."', 'Seu cliente ser&#225; redirecionado de volta para sua loja ou para a URL que voc&#234; informar neste campo. Clique <a href=\"https://pagseguro.uol.com.br/integracao/pagamentos-via-api.jhtml\" target=\"_blank\"><strong>aqui</strong></a> para ativar.', '6', '0', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('URL DE NOTIFICA&Ccedil;&Atilde;O', 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION', '".$this->_generateNotificationUrl()."', 'Sempre que uma transa&#231;&#227;o mudar de status, o PagSeguro envia uma notifica&#231;&#227;o para sua loja ou para a URL que voc&#234; informar neste campo.', '6', '0',now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('URL DE NOTIFICA&#199;&#195;O', 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION', '".$this->_generateNotificationUrl()."', 'Sempre que uma transa&#231;&#227;o mudar de status, o PagSeguro envia uma notifica&#231;&#227;o para sua loja ou para a URL que voc&#234; informar neste campo.', '6', '0',now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('CHARSET', 'MODULE_PAYMENT_PAGSEGURO_CHARSET', '".PagSeguroConfig::getData('application', 'charset')."', 'Defina o charset de acordo com a codifica&#231;&#227;o do seu sistema.', '6', '0', 'tep_cfg_select_option(array(\'ISO-8859-1\', \'UTF-8\'), ', now())");
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('LOG', 'MODULE_PAYMENT_PAGSEGURO_LOG_ACTIVE', 'False', 'Criar arquivo de log?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DIRETÓRIO', 'MODULE_PAYMENT_PAGSEGURO_LOG_FILELOCATION', '".PagSeguroConfig::getData('log', 'fileLocation')."', 'Caminho para o arquivo de log.', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('DIRET&#211;RIO', 'MODULE_PAYMENT_PAGSEGURO_LOG_FILELOCATION', '".PagSeguroConfig::getData('log', 'fileLocation')."', 'Caminho para o arquivo de log.', '6', '0', now())");
         
         // generating PagSeguro order status
         $this->_generatePagSeguroOrderStatus();
-    }
-    
-      /**
-     * Return the notification url
-     */
-    private function _generateNotificationUrl(){
-        
-        $configuration_value = $this->_configurationValueNotification();
-        $url_system = $this->_urlNotificationSystem();
-               
-            if( $configuration_value['save'] ){
-                return $url_system;
-            } 
-            
-       return $configuration_value['url'];
-        
     }
     
     /**
@@ -151,7 +135,7 @@ class pagseguro {
      * Save url notification system
      */
     private function _saveUrlNotificationSystem(){
-        $url_sytem = $this->_urlNotificationSystem();
+        $url_sytem = $this->_generateNotificationUrl();
         
         $query = "UPDATE ". TABLE_CONFIGURATION ." SET configuration_value = '$url_sytem' ";
         $query .= " WHERE configuration_key = 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION'";
@@ -161,14 +145,7 @@ class pagseguro {
         } catch (Exception $exc) {}
     }
         
-    /**
-     * Url notification system
-     * @return string
-     */
-    private function _urlNotificationSystem(){
-        return HTTP_SERVER.DIR_WS_CATALOG.'pagseguronotification.php';
-    }
-    
+   
     /**
      * PagSeguro module removal function
      */
@@ -445,6 +422,15 @@ class pagseguro {
         }
 
         return $notificationUrl;
+    }
+
+    /**
+     * Generate Notification Url
+     * @return string
+     */
+    private function _generateNotificationUrl(){
+	return HTTP_SERVER.DIR_WS_CATALOG.'pagseguronotification.php';
+        
     }
     
     /**
