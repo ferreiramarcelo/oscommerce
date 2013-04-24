@@ -145,11 +145,11 @@ class pagseguro {
         } catch (Exception $exc) {}
     }
         
-   
     /**
      * PagSeguro module removal function
      */
     function remove() {
+		// remove PagSeguro configuration data
         tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
@@ -177,7 +177,7 @@ class pagseguro {
         return false;
     }
 
-    /**HTTP_SERVER.DIR_WS_CATALOG
+    /**
      * Called on payment method selection
      * if the current order products aren't in brazilian currency (BRL),
      * PagSeguro payment gateway will not displayed
@@ -252,25 +252,25 @@ class pagseguro {
     function after_process() {
         
         global $cart;
-
-
         global $insert_id;
+
         // getting new order status id
         $language_code = $this->_getCurrentCodeLanguage();
         $order_status_id = $this->_getOrderStatusID(PagSeguroOrderStatusTranslation::getStatusTranslation('WAITING_PAYMENT', $language_code));
-        // updating order status
 
-	$this->updateOrderStatus($insert_id, $order_status_id);
+        // updating order status
+		$this->updateOrderStatus($insert_id, $order_status_id);
 
         // adding reference code to $this->_pagSeguroPaymentRequestObject
         $this->_pagSeguroPaymentRequestObject->setReference((string)$insert_id);
 	
-	// performing PagSeguro order request
+		// performing PagSeguro order request
         $this->_performPagSeguroRequest($this->_pagSeguroPaymentRequestObject);
-        // redirecting to PagSeguro server
-
+        
+        // clear cart
         $cart->reset(true);
 
+        // redirecting to PagSeguro server
         tep_redirect($this->_pagSeguroResponseUrl);
        	
     }
@@ -393,7 +393,6 @@ class pagseguro {
      * @return \PagSeguroPaymentRequest
      */
     private function _generatePagSeguroPaymentRequestObject(){
-        global $currency;
         
         $paymentRequest = new PagSeguroPaymentRequest();
         $paymentRequest->setCurrency(PagSeguroCurrencies::getIsoCodeByName("REAL")); // sets currency
@@ -616,13 +615,25 @@ class pagseguro {
         // performing new PagSeguro orders status insertions
         foreach (array_keys(PagSeguroTransactionStatus::getStatusList()) as $status) {
             foreach ($languages as $language) {
-                tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $newStatusId . "', '" . $language['id'] . "', '".PagSeguroOrderStatusTranslation::getStatusTranslation($status, strtolower($language['code']))."')");
+                // check if status is already on database, in affirmative case, will not be installed news PagSeguro orders statuses
+                if (!$this->_checkIfOrderStatusExists(PagSeguroOrderStatusTranslation::getStatusTranslation($status, strtolower($language['code'])))){
+                    tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $newStatusId . "', '" . $language['id'] . "', '".PagSeguroOrderStatusTranslation::getStatusTranslation($status, strtolower($language['code']))."')");
+                }
             }
             // incrementing status id after insertion of one status in all languages
             ++$newStatusId;
         }
     }
 
+    /**
+     * Check if PagSeguro order status already exists on database
+     * @param String $status
+     * @return boolean
+     */
+    private function _checkIfOrderStatusExists($status){
+        return (tep_db_num_rows(tep_db_query('select orders_status_id from ' . TABLE_ORDERS_STATUS . ' where orders_status_name like \''.$status.'\'')) > 0);
+    }
+    
     /**
      * Including PagSeguro library to system scope
      */
