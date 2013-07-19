@@ -18,7 +18,8 @@
  ************************************************************************
  */
 
-class pagsegurosearchtransaction {
+class pagsegurosearchtransaction
+{
 
 	private $transactionCode;
 
@@ -28,27 +29,31 @@ class pagsegurosearchtransaction {
 
 	private $objTransaction;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->transactionCode = '7326443-4343-rgrt4654-trt4';
 		$this->_createCredential();
 		$this->_createTransaction();
 	}
 
-	private function _createCredential() {
+	private function _createCredential()
+	{
 		$this->_configuration();
 		if ($this->configurations) {
 			$this->objCredentials = new PagSeguroAccountCredentials($this->configurations['MODULE_PAYMENT_PAGSEGURO_EMAIL'], $this->configurations['MODULE_PAYMENT_PAGSEGURO_TOKEN']);
 		}
 	}
 
-	private function _configuration() {
+	private function _configuration()
+	{
 		$queryResult = tep_db_query("select * from configuration where configuration_key like 'MODULE_PAYMENT_PAGSEGURO%'");
 		while ($config = tep_db_fetch_array($queryResult)) {
 			$this->configurations[$config['configuration_key']] = $config['configuration_value'];
 		}
 	}
 
-	private function _createTransaction() {
+	private function _createTransaction()
+	{
 		$this->objTransaction = PagSeguroTransactionSearchService::searchByCode($this->objCredentials, $this->transactionCode);
 	}
 }

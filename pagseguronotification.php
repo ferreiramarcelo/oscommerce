@@ -27,7 +27,8 @@ include_once DIR_FS_CATALOG_MODULES . 'payment/pagseguro.php';
 /**
  * Class PagSeguro Notification
  */
-class pagseguronotification {
+class pagseguronotification
+{
 
 	private $notificationType;
 	private $notificationCode;
@@ -37,7 +38,8 @@ class pagseguronotification {
 	 * Construct
 	 * @param type $post
 	 */
-	public function __construct($post) {
+	public function __construct($post)
+	{
 		$this->post = $post;
 		$this->_createNotification();
 		$obj = new notification();
@@ -47,7 +49,8 @@ class pagseguronotification {
 	/**
 	 * Create Notification
 	 */
-	private function _createNotification() {
+	private function _createNotification()
+	{
 		$this->notificationType = (isset($this->post['notificationType']) && trim($this->post['notificationType']) != "") ? trim($this->post['notificationType']) : null;
 		$this->notificationCode = (isset($this->post['notificationCode']) && trim($this->post['notificationCode']) != "") ? trim($this->post['notificationCode']) : null;
 	}

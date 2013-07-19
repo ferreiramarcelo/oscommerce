@@ -20,7 +20,8 @@
 /**
  * Class Notification
  */
-class notification {
+class notification
+{
 
 	private $notificationType;
 
@@ -43,7 +44,8 @@ class notification {
 	/**
 	 * Construct
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 	}
 
 	/**
@@ -51,7 +53,8 @@ class notification {
 	 * @param type $notificationType
 	 * @param type $notificationCode
 	 */
-	public function initialize($notificationType, $notificationCode) {
+	public function initialize($notificationType, $notificationCode)
+	{
 		$this->notificationType = $notificationType;
 		$this->notificationCode = $notificationCode;
 
@@ -68,7 +71,8 @@ class notification {
 	/**
 	 * Configuration
 	 */
-	private function _configuration() {
+	private function _configuration()
+	{
 		$queryResult = tep_db_query("select * from configuration where configuration_key like 'MODULE_PAYMENT_PAGSEGURO%'");
 		while ($config = tep_db_fetch_array($queryResult)) {
 			$this->configurations[$config['configuration_key']] = $config['configuration_value'];
@@ -78,7 +82,8 @@ class notification {
 	/**
 	 * Create Credentials
 	 */
-	private function _createCredentials() {
+	private function _createCredentials()
+	{
 		if ($this->configurations) {
 			$this->objCredentials = new PagSeguroAccountCredentials($this->configurations['MODULE_PAYMENT_PAGSEGURO_EMAIL'], $this->configurations['MODULE_PAYMENT_PAGSEGURO_TOKEN']);
 		}
@@ -87,7 +92,8 @@ class notification {
 	/**
 	 * Initialize Objects
 	 */
-	private function _initializeObjects() {
+	private function _initializeObjects()
+	{
 		$this->_createNotificationType();
 		$this->_createObjPagSeguro();
 		$this->_createArrayStatusCms();
@@ -96,7 +102,8 @@ class notification {
 	/**
 	 * Create Notification Type
 	 */
-	private function _createNotificationType() {
+	private function _createNotificationType()
+	{
 		$this->objNotificationType = new PagSeguroNotificationType();
 		$this->objNotificationType->setByType('TRANSACTION');
 	}
@@ -104,14 +111,16 @@ class notification {
 	/**
 	 * Create Object PagSeguro
 	 */
-	private function _createObjPagSeguro() {
+	private function _createObjPagSeguro()
+	{
 		$this->objPagSeguro = new pagseguro();
 	}
 
 	/**
 	 * Create Array Status Cms br, en
 	 */
-	private function _createArrayStatusCms() {
+	private function _createArrayStatusCms()
+	{
 		$this->arrayStCms = array(
 			0 => array("br" => "Iniciado", "en" => "Initiated"),
 			1 => array("br" => "Aguardando pagamento", "en" => "Waiting payment"),
@@ -126,7 +135,8 @@ class notification {
 	/**
 	 * Create Transaction
 	 */
-	private function _createTransaction() {
+	private function _createTransaction()
+	{
 		$this->objTransaction = PagSeguroNotificationService::checkTransaction($this->objCredentials, $this->notificationCode);
 		$this->reference = $this->objTransaction->getReference();
 	}
@@ -134,7 +144,8 @@ class notification {
 	/**
 	 * Update Cms
 	 */
-	private function _updateCms() {
+	private function _updateCms()
+	{
 		$arrayValue = $this->arrayStCms[$this->objTransaction->getStatus()->getValue()];
 		$idStatus = $this->_returnIdOrderByStatusPagSeguro($arrayValue);
 		$this->_updateOrders($idStatus);
@@ -144,15 +155,19 @@ class notification {
 	 * Update Orders
 	 * @param type $idStatus
 	 */
-	private function _updateOrders($idStatus) {
+	private function _updateOrders($idStatus)
+	{
 		$query = 'UPDATE orders
             SET orders_status = ' . (int) $idStatus;
 		$query .= ' WHERE orders_id = ' . (int) $this->reference;
 
-		try {
+		try
+		{
 			tep_db_query($query);
 			$this->objPagSeguro->updateOrderStatus($this->reference, $idStatus);
-		} catch (Exception $exc) {
+		}
+		catch (Exception $exc)
+		{
 		}
 	}
 
@@ -161,7 +176,8 @@ class notification {
 	 * @param type $value
 	 * @return type
 	 */
-	private function _returnIdOrderByStatusPagSeguro($value = null) {
+	private function _returnIdOrderByStatusPagSeguro($value = null)
+	{
 		$query = 'SELECT distinct os.orders_status_id from orders_status os
                               WHERE os.orders_status_name = ';
 

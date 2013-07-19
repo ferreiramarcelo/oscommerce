@@ -18,13 +18,15 @@
  ************************************************************************
  */
 
-class pagseguro {
+class pagseguro
+{
 
 	var $code, $title, $description, $enabled;
 	private $_pagSeguroResponseUrl;
 	private $_pagSeguroPaymentRequestObject;
 
-	function pagseguro() {
+	function pagseguro()
+	{
 		global $order;
 
 		$this->api_version = '1.2';
@@ -53,7 +55,8 @@ class pagseguro {
 	 * Perform module update status for selected zone
 	 * @global Object $order
 	 */
-	function update_status() {
+	function update_status()
+	{
 		global $order;
 
 		if (($this->enabled == true) && ((int) MODULE_PAYMENT_PAGSEGURO_ZONE > 0)) {
@@ -81,7 +84,8 @@ class pagseguro {
 	 * Checks if module is available
 	 * @return bool
 	 */
-	function check() {
+	function check()
+	{
 		if (!isset($this->_check)) {
 			$check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . "
                                         where configuration_key = 'MODULE_PAYMENT_PAGSEGURO_STATUS'");
@@ -93,7 +97,8 @@ class pagseguro {
 	/**
 	 * PagSeguro payment module installation function
 	 */
-	function install() {
+	function install()
+	{
 
 		// generating PagSeguro module configurations
 		tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('ATIVAR M&#211;DULO', 'MODULE_PAYMENT_PAGSEGURO_STATUS', 'True', 'Deseja habilitar o m&#243;dulo?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -114,7 +119,8 @@ class pagseguro {
 	 * Configuration value notification
 	 * @return type
 	 */
-	private function _configurationValueNotification() {
+	private function _configurationValueNotification()
+	{
 		$query = tep_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION'");
 		$result = tep_db_fetch_array($query);
 		$save = false;
@@ -130,22 +136,27 @@ class pagseguro {
 	/**
 	 * Save url notification system
 	 */
-	private function _saveUrlNotificationSystem() {
+	private function _saveUrlNotificationSystem()
+	{
 		$url_sytem = $this->_generateNotificationUrl();
 
 		$query = "UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '$url_sytem' ";
 		$query .= " WHERE configuration_key = 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION'";
 
-		try {
+		try
+		{
 			tep_db_query($query);
-		} catch (Exception $exc) {
+		}
+		catch (Exception $exc)
+		{
 		}
 	}
 
 	/**
 	 * PagSeguro module removal function
 	 */
-	function remove() {
+	function remove()
+	{
 		// remove PagSeguro configuration data
 		tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
 	}
@@ -154,7 +165,8 @@ class pagseguro {
 	 * Configuration keys
 	 * @return Array
 	 */
-	function keys() {
+	function keys()
+	{
 		return array('MODULE_PAYMENT_PAGSEGURO_STATUS', 'MODULE_PAYMENT_PAGSEGURO_SORT_ORDER', 'MODULE_PAYMENT_PAGSEGURO_EMAIL', 'MODULE_PAYMENT_PAGSEGURO_TOKEN', 'MODULE_PAYMENT_PAGSEGURO_REDIRECT_URL', 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION', 'MODULE_PAYMENT_PAGSEGURO_CHARSET', 'MODULE_PAYMENT_PAGSEGURO_LOG_ACTIVE', 'MODULE_PAYMENT_PAGSEGURO_LOG_FILELOCATION');
 	}
 
@@ -162,7 +174,8 @@ class pagseguro {
 	 * add any javascript validation in the payment method view
 	 * @return boolean
 	 */
-	function javascript_validation() {
+	function javascript_validation()
+	{
 		return false;
 	}
 
@@ -170,7 +183,8 @@ class pagseguro {
 	 * Proccess any data when user will start checkout process
 	 * @return boolean
 	 */
-	function checkout_initialization_method() {
+	function checkout_initialization_method()
+	{
 		return false;
 	}
 
@@ -180,7 +194,8 @@ class pagseguro {
 	 * PagSeguro payment gateway will not displayed
 	 * @return Array
 	 */
-	function selection() {
+	function selection()
+	{
 		$retorno = FALSE;
 
 		if ($this->_currencyValidation())
@@ -194,7 +209,8 @@ class pagseguro {
 	 * @global type $cartID
 	 * @global type $cart
 	 */
-	function pre_confirmation_check() {
+	function pre_confirmation_check()
+	{
 		global $cartID, $cart;
 
 		if (empty($cart->cartID)) {
@@ -210,18 +226,20 @@ class pagseguro {
 	 * Add or process any information to confirmation view
 	 * @return array
 	 */
-	function confirmation() {
-		return array('title' => $this->title . ': ',
+	function confirmation()
+	{
+		return array('title'	 => $this->title . ': ',
 			'fields' => array(
-				array('title' => MODULE_PAYMENT_PAGSEGURO_TEXT_OUTSIDE,
-					'field' => "")));
+				array('title'	 => MODULE_PAYMENT_PAGSEGURO_TEXT_OUTSIDE,
+					'field'	 => "")));
 	}
 
 	/**
 	 * Proccess any data when confirmation button is generated
 	 * @return boolean
 	 */
-	function process_button() {
+	function process_button()
+	{
 		return FALSE;
 	}
 
@@ -229,7 +247,8 @@ class pagseguro {
 	 * Proccess any data when user click confirmation button
 	 * and just before start system order processing
 	 */
-	function before_process() {
+	function before_process()
+	{
 
 		// perform currency validation
 		if (!$this->_currencyValidation()) {
@@ -246,7 +265,8 @@ class pagseguro {
 	 * Customer will be able to finalize buy process
 	 * @return boolean
 	 */
-	function after_process() {
+	function after_process()
+	{
 
 		global $cart;
 		global $insert_id;
@@ -276,7 +296,8 @@ class pagseguro {
 	 * Get errors
 	 * @return boolean
 	 */
-	function get_error() {
+	function get_error()
+	{
 		return FALSE;
 	}
 
@@ -286,9 +307,11 @@ class pagseguro {
 	 *
 	 * @param PagSeguroPaymentRequest $paymentRequest
 	 */
-	private function _performPagSeguroRequest(PagSeguroPaymentRequest $paymentRequest) {
+	private function _performPagSeguroRequest(PagSeguroPaymentRequest $paymentRequest)
+	{
 
-		try {
+		try
+		{
 
 			// retrieving PagSeguro configurations
 			$configurations = $this->_retrievePagSeguroConfiguration();
@@ -305,7 +328,9 @@ class pagseguro {
 
 			$this->_pagSeguroResponseUrl = $paymentRequest->register($credentials);
 
-		} catch (PagSeguroServiceException $e) {
+		}
+		catch (PagSeguroServiceException $e)
+		{
 			die($e->getMessage());
 		}
 	}
@@ -313,20 +338,25 @@ class pagseguro {
 	/**
 	 * Retrieve PagSeguro osCommerce module version
 	 */
-	private function _retrievePagSeguroModuleVersion() {
+	private function _retrievePagSeguroModuleVersion()
+	{
 		PagSeguroLibrary::setModuleVersion('oscommerce' . ':' . $this->api_version);
 	}
 
 	/**
 	 * Set version CMS
 	 */
-	private function _setCmsVersion() {
-		try {
+	private function _setCmsVersion()
+	{
+		try
+		{
 			$file = @fopen(DIR_FS_CATALOG . 'includes/version.php', 'r');
 			$version = fread($file, 12);
 			PagSeguroLibrary::setCMSVersion('oscommerce' . ':' . $version);
 
-		} catch (Exception $exc) {
+		}
+		catch (Exception $exc)
+		{
 			echo $exc->getMessage();
 		}
 	}
@@ -335,7 +365,8 @@ class pagseguro {
 	 * Retrieve PagSeguro admin data configuration from database
 	 * @return Array
 	 */
-	private function _retrievePagSeguroConfiguration() {
+	private function _retrievePagSeguroConfiguration()
+	{
 		$queryResult = tep_db_query("select * from configuration where configuration_key like 'MODULE_PAYMENT_PAGSEGURO%'");
 
 		$configurations = array();
@@ -349,7 +380,8 @@ class pagseguro {
 	/**
 	 * Retrieve PagSeguro data configuration from database
 	 */
-	private function _setPagSeguroConfiguration($charset, $activeLog = FALSE, $fileLocation = NULL) {
+	private function _setPagSeguroConfiguration($charset, $activeLog = FALSE, $fileLocation = NULL)
+	{
 
 		// setting configurated default charset
 		PagSeguroConfig::setApplicationCharset($charset);
@@ -367,12 +399,16 @@ class pagseguro {
 	 * Case log file not exists, try create
 	 * else, log will be created as name as PagSeguro.log as name into PagseguroLibrary folder into module
 	 */
-	private function _verifyLogFile($file) {
+	private function _verifyLogFile($file)
+	{
 
-		try {
+		try
+		{
 			$f = fopen($file, "a");
 			fclose($f);
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			die($e);
 		}
 	}
@@ -384,7 +420,8 @@ class pagseguro {
 	 * @global Object $currency
 	 * @return \PagSeguroPaymentRequest
 	 */
-	private function _generatePagSeguroPaymentRequestObject() {
+	private function _generatePagSeguroPaymentRequestObject()
+	{
 
 		$paymentRequest = new PagSeguroPaymentRequest();
 		$paymentRequest->setCurrency(PagSeguroCurrencies::getIsoCodeByName("REAL")); // sets currency
@@ -402,7 +439,8 @@ class pagseguro {
 	 * Get PagSeguro notification url from database configuration
 	 * @return string
 	 */
-	private function _getPagSeguroNotificationUrl() {
+	private function _getPagSeguroNotificationUrl()
+	{
 		$notificationUrl = NULL;
 
 		$queryResult = tep_db_query("select configuration_value as notificationUrl from configuration where configuration_key = 'MODULE_PAYMENT_PAGSEGURO_NOTIFICATION' limit 1");
@@ -419,7 +457,8 @@ class pagseguro {
 	 * Generate Notification Url
 	 * @return string
 	 */
-	private function _generateNotificationUrl() {
+	private function _generateNotificationUrl()
+	{
 		return HTTP_SERVER . DIR_WS_CATALOG . 'pagseguronotification.php';
 
 	}
@@ -428,7 +467,8 @@ class pagseguro {
 	 * Get PagSeguro redirect url from database configuration
 	 * @return string
 	 */
-	private function _getPagSeguroRedirectUrl() {
+	private function _getPagSeguroRedirectUrl()
+	{
 		$redirectUrl = NULL;
 
 		$queryResult = tep_db_query("select configuration_value as redirectUrl from configuration where configuration_key = 'MODULE_PAYMENT_PAGSEGURO_REDIRECT_URL' limit 1");
@@ -445,7 +485,8 @@ class pagseguro {
 	 * Generate Redirect Url
 	 * @return string
 	 */
-	private function _generateRedirectUrl() {
+	private function _generateRedirectUrl()
+	{
 		return HTTP_SERVER . DIR_WS_CATALOG . 'checkout_success.php';
 	}
 
@@ -454,7 +495,8 @@ class pagseguro {
 	 * @global Object $order
 	 * @return type
 	 */
-	private function _generateExtraAmount() {
+	private function _generateExtraAmount()
+	{
 		global $order;
 		$tax = null;
 
@@ -469,7 +511,8 @@ class pagseguro {
 	 * @global Object $order
 	 * @return PagSeguroShipping
 	 */
-	private function _generatePagSeguroShippingDataObject() {
+	private function _generatePagSeguroShippingDataObject()
+	{
 		global $order;
 
 		$shipping = new PagSeguroShipping();
@@ -485,7 +528,8 @@ class pagseguro {
 	 *  @global Object $order
 	 *  @return PagSeguroShippingType
 	 */
-	private function _generatePagSeguroShippingTypeObject() {
+	private function _generatePagSeguroShippingTypeObject()
+	{
 		$shippingType = new PagSeguroShippingType();
 		$shippingType->setByType('NOT_SPECIFIED');
 
@@ -497,7 +541,8 @@ class pagseguro {
 	 *  @global Object $order
 	 *  @return PagSeguroAddress
 	 */
-	private function _generatePagSeguroShippingAddressDataObject() {
+	private function _generatePagSeguroShippingAddressDataObject()
+	{
 		global $order;
 
 		$address = new PagSeguroAddress();
@@ -520,7 +565,8 @@ class pagseguro {
 	 *  @global Object $order
 	 *  @return PagSeguroSender
 	 */
-	private function _generatepagSeguroSenderDataObject() {
+	private function _generatepagSeguroSenderDataObject()
+	{
 		global $order;
 
 		$sender = new PagSeguroSender();
@@ -539,7 +585,8 @@ class pagseguro {
 	 * @global Object $order
 	 * @return Array PagSeguroItem
 	 */
-	private function _generatePagSeguroProductsData() {
+	private function _generatePagSeguroProductsData()
+	{
 		global $order;
 		$pagSeguroItems = array();
 
@@ -569,7 +616,8 @@ class pagseguro {
 	 * @param String $orderStatus
 	 * @return Integer
 	 */
-	private function _getOrderStatusID($orderStatus) {
+	private function _getOrderStatusID($orderStatus)
+	{
 
 		$orderStatusId = tep_db_fetch_array(tep_db_query("select orders_status_id from orders_status where orders_status_name = '" . $orderStatus . "' limit 1"));
 
@@ -581,13 +629,14 @@ class pagseguro {
 	 * @param type $order_id
 	 * @param type $order_status_id
 	 */
-	public function updateOrderStatus($order_id, $order_status_id) {
+	public function updateOrderStatus($order_id, $order_status_id)
+	{
 
-		$sql_data_array = array('orders_id' => $order_id,
-			'orders_status_id' => $order_status_id,
-			'date_added' => 'now()',
-			'customer_notified' => '1',
-			'comments' => "STATUS ATUALIZADO");
+		$sql_data_array = array('orders_id'			 => $order_id,
+			'orders_status_id'	 => $order_status_id,
+			'date_added'		 => 'now()',
+			'customer_notified'	 => '1',
+			'comments'			 => "STATUS ATUALIZADO");
 
 		tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 	}
@@ -595,7 +644,8 @@ class pagseguro {
 	/**
 	 * Generates PagSeguro order status on database
 	 */
-	private function _generatePagSeguroOrderStatus() {
+	private function _generatePagSeguroOrderStatus()
+	{
 
 		// getting order status id from order_status table
 		$lastOrdersStatusId = tep_db_fetch_array(tep_db_query("select max(orders_status_id) as last_status_id from " . TABLE_ORDERS_STATUS));
@@ -621,14 +671,16 @@ class pagseguro {
 	 * @param String $status
 	 * @return boolean
 	 */
-	private function _checkIfOrderStatusExists($status) {
+	private function _checkIfOrderStatusExists($status)
+	{
 		return (tep_db_num_rows(tep_db_query('select orders_status_id from ' . TABLE_ORDERS_STATUS . ' where orders_status_name like \'' . $status . '\'')) > 0);
 	}
 
 	/**
 	 * Including PagSeguro library to system scope
 	 */
-	private function _addPagSeguroLibrary() {
+	private function _addPagSeguroLibrary()
+	{
 		include_once DIR_FS_CATALOG . '/ext/modules/payment/pagseguro/PagSeguroLibrary/PagSeguroLibrary.php';
 		include_once DIR_FS_CATALOG . '/ext/modules/payment/pagseguro/PagSeguroOrderStatusTranslation.php';
 	}
@@ -640,7 +692,8 @@ class pagseguro {
 	 * @param type $endchars
 	 * @return string
 	 */
-	private function _truncateValue($string, $limit, $endchars = '...') {
+	private function _truncateValue($string, $limit, $endchars = '...')
+	{
 
 		if (!is_array($string) || !is_object($string)) {
 
@@ -660,7 +713,8 @@ class pagseguro {
 	 * @global Object $currency
 	 * @return type
 	 */
-	private function _currencyValidation() {
+	private function _currencyValidation()
+	{
 		global $currency;
 		return ($currency == 'BRL');
 	}
@@ -670,7 +724,8 @@ class pagseguro {
 	 * @global int $languages_id
 	 * @return string - the language code
 	 */
-	private function _getCurrentCodeLanguage() {
+	private function _getCurrentCodeLanguage()
+	{
 		global $languages_id;
 		$languageCode = tep_db_fetch_array(tep_db_query("select code from languages where languages_id = " . $languages_id));
 		return $languageCode['code'];
